@@ -6,6 +6,7 @@ memory of the conversation — see attempted_actions_from_events().
 
 import json
 
+from app import intent as intent_module
 from app.models import Conversation, Escalation, Event
 
 _PACKET_PROMPT = """A customer support conversation is being escalated to a human agent.
@@ -83,11 +84,26 @@ def create_escalation(session, customer_id: int, conversation_id: int, reason: s
     )
     session.commit()
 
+    # F-005's intent breakdown needs one cheap classification per conversation
+    # "at close/escalation" — escalation is the only close trigger that exists today.
+    intent_module.classify_intent(session, conversation_id, llm_complete)
+
     message = (
         f"I've raised this with our support team with full context — reference #{reference}; "
         "expect a response within 4 business hours."
     )
     return {"escalation_id": row.id, "reference": reference, "message": message, "packet": packet}
+
+
+def claim_escalation(session, escalation_id: int) -> Escalation | None:
+    """Flip an open escalation to claimed. Idempotent — claiming an
+    already-claimed row is a no-op, not an error."""
+    row = session.get(Escalation, escalation_id)
+    if row is None:
+        return None
+    row.status = "claimed"
+    session.commit()
+    return row
 
 
 def attempted_actions_from_events(session, conversation_id: int) -> list[str]:

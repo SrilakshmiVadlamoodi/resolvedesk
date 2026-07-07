@@ -35,10 +35,24 @@ expect:
 - `--subset smoke` = 8 demo-critical scenarios; runs in CI on every push.
 - Full run budget: < 15 min, < ₹100 of API spend.
 
+## Note: this suite is the only real-API integration check we have
+F-002 through F-007's test suites deliberately never call `app/llm.py:complete()` —
+every test injects a fake `llm_complete`, so the real Anthropic SDK call (auth,
+request formatting, tool-use response parsing) has zero automated coverage outside
+this feature. That's the right tradeoff for a hackathon timeline (fast, free, offline
+CI), but it means F-006 is doing double duty: proving agent *behavior* and being the
+*only* place that would catch a broken `ANTHROPIC_API_KEY`, a bad model string, or a
+response-parsing bug in `complete()` before demo day. Make sure at least 1-2 scenarios
+in the smoke subset are explicitly "does a real round-trip to Claude succeed at all"
+checks (e.g. assert a response comes back with no exception and a non-empty answer),
+not just behavioral assertions — so an auth/plumbing failure fails loudly in CI instead
+of silently until someone runs the app live.
+
 ## Acceptance criteria
 1. Full suite runs unattended and produces the report.
 2. The three demo flows are covered by smoke scenarios and pass 3 consecutive runs (flakiness check).
 3. Final pass rate ≥ 90%, with honest documentation of the failures we chose to accept.
+4. At least 1-2 smoke scenarios assert a bare real-API round-trip succeeds (auth + request + response parsing), independent of any behavioral correctness check — this is the suite's only coverage of `app/llm.py:complete()` itself.
 
 ## Out of scope
 Latency benchmarking, cost tracking dashboards, regression history over time.

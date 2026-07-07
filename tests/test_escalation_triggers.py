@@ -45,6 +45,7 @@ def test_explicit_human_request_escalates_immediately_without_agent_argument():
             ],
         ),
         LLMResponse(content=PACKET_JSON, tool_calls=[]),
+        LLMResponse(content="other", tool_calls=[]),
     )
 
     result = agent.run_turn(session, aditi.id, conversation_id=1, history=[], user_message="talk to a human", llm_complete=llm)
@@ -71,6 +72,7 @@ def test_refund_over_ceiling_escalation_has_correct_reason_and_nonempty_suggeste
             '"sentiment": "frustrated", "suggested_action": "Approve manually — order qualifies on every rule except amount."}',
             tool_calls=[],
         ),
+        LLMResponse(content="refund", tool_calls=[]),
     )
 
     result = agent.run_turn(session, aditi.id, conversation_id=1, history=[], user_message="refund my ₹8,499 order", llm_complete=llm)
@@ -95,6 +97,7 @@ def test_handoff_packet_attempted_actions_exactly_matches_logged_events():
             ],
         ),
         LLMResponse(content=PACKET_JSON, tool_calls=[]),
+        LLMResponse(content="refund", tool_calls=[]),
     )
 
     result = agent.run_turn(session, aditi.id, conversation_id=9, history=[], user_message="check my order then refund it", llm_complete=llm)
@@ -115,6 +118,7 @@ def test_low_confidence_kb_search_escalates():
             tool_calls=[{"id": "1", "name": "search_kb", "arguments": {"query": "do you sell refrigerators"}}],
         ),
         LLMResponse(content=PACKET_JSON, tool_calls=[]),
+        LLMResponse(content="other", tool_calls=[]),
     )
 
     result = agent.run_turn(session, aditi.id, conversation_id=1, history=[], user_message="do you sell refrigerators", llm_complete=llm)
@@ -133,6 +137,7 @@ def test_customer_can_ask_an_unrelated_question_after_escalation():
             tool_calls=[{"id": "1", "name": "escalate_to_human", "arguments": {"reason": "human_requested", "summary": "x"}}],
         ),
         LLMResponse(content=PACKET_JSON, tool_calls=[]),
+        LLMResponse(content="other", tool_calls=[]),
     )
     escalated = agent.run_turn(session, aditi.id, conversation_id=1, history=[], user_message="talk to a human", llm_complete=llm1)
     assert escalated.escalated is True
