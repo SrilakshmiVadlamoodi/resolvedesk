@@ -20,7 +20,7 @@ def make_session():
 def fake_llm(*responses):
     it = iter(responses)
 
-    def _complete(messages, tools=None):
+    def _complete(messages, tools=None, tool_choice=None):
         return next(it)
 
     return _complete

@@ -19,6 +19,8 @@ GITHUB_MODEL = "openai/gpt-4.1"
 GITHUB_MODELS_BASE_URL = "https://models.github.ai/inference"
 TOGETHER_MODEL = "meta-llama/Llama-3.3-70B-Instruct-Turbo"
 TOGETHER_BASE_URL = "https://api.together.ai/v1"
+OPENROUTER_MODEL = "anthropic/claude-haiku-4.5"
+OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1"
 
 
 @dataclass
@@ -280,10 +282,10 @@ def _complete_github(messages: list[dict], tools: list[dict] | None) -> LLMRespo
     return LLMResponse(content=text, tool_calls=tool_calls)
 
 
-def _together_tool_declarations(tools: list[dict]) -> list[dict]:
-    """Together's OpenAI-compatible endpoint doesn't document support for OpenAI's
-    `strict` constrained-decoding mode, so tool schemas are passed through as-is
-    rather than reusing `_openai_tool_declarations`."""
+def _plain_openai_tool_declarations(tools: list[dict]) -> list[dict]:
+    """Together and OpenRouter's OpenAI-compatible endpoints don't document support
+    for OpenAI's `strict` constrained-decoding mode, so tool schemas are passed
+    through as-is rather than reusing `_openai_tool_declarations`."""
     return [
         {
             "type": "function",
@@ -315,7 +317,38 @@ def _complete_together(messages: list[dict], tools: list[dict] | None) -> LLMRes
         client,
         model=TOGETHER_MODEL,
         messages=openai_messages,
-        tools=_together_tool_declarations(tools) if tools else None,
+        tools=_plain_openai_tool_declarations(tools) if tools else None,
+    )
+
+    choice = response.choices[0].message
+    text = choice.content or None
+    tool_calls = [
+        {"id": call.id, "name": call.function.name, "arguments": json.loads(call.function.arguments)}
+        for call in (choice.tool_calls or [])
+    ]
+
+    return LLMResponse(content=text, tool_calls=tool_calls)
+
+
+@retry(
+    retry=retry_if_exception(_is_openai_rate_limited),
+    wait=wait_random_exponential(multiplier=1, max=20),
+    stop=stop_after_attempt(3),
+    reraise=True,
+)
+def _create_openrouter_completion(client: openai.OpenAI, **kwargs):
+    return client.chat.completions.create(**kwargs)
+
+
+def _complete_openrouter(messages: list[dict], tools: list[dict] | None) -> LLMResponse:
+    client = openai.OpenAI(api_key=settings.openrouter_api_key, base_url=OPENROUTER_BASE_URL)
+    openai_messages = _to_openai_messages(messages)
+
+    response = _create_openrouter_completion(
+        client,
+        model=OPENROUTER_MODEL,
+        messages=openai_messages,
+        tools=_plain_openai_tool_declarations(tools) if tools else None,
     )
 
     choice = response.choices[0].message
@@ -337,4 +370,6 @@ def complete(messages: list[dict], tools: list[dict] | None = None) -> LLMRespon
         return _complete_github(messages, tools)
     if settings.llm_provider == "together":
         return _complete_together(messages, tools)
+    if settings.llm_provider == "openrouter":
+        return _complete_openrouter(messages, tools)
     raise ValueError(f"unknown llm_provider: {settings.llm_provider}")

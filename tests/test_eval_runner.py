@@ -6,7 +6,7 @@ from evals.scenarios import Scenario
 def fake_llm(*responses):
     it = iter(responses)
 
-    def _complete(messages, tools=None):
+    def _complete(messages, tools=None, tool_choice=None):
         return next(it)
 
     return _complete
@@ -245,7 +245,7 @@ def test_policy_reason_check_fails_when_actual_reason_differs():
 def test_an_exception_from_llm_complete_is_recorded_as_a_failure_not_raised():
     scenario = Scenario(id="broken-api", persona="aditi@example.com", turns=[{"user": "hi"}], expect={})
 
-    def broken_llm(messages, tools=None):
+    def broken_llm(messages, tools=None, tool_choice=None):
         raise RuntimeError("401 unauthorized")
 
     result = run_scenario(scenario, llm_complete=broken_llm)

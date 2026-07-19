@@ -41,7 +41,7 @@ def make_client():
 def set_llm(*responses):
     it = iter(responses)
 
-    def fake_llm(messages, tools=None):
+    def fake_llm(messages, tools=None, tool_choice=None):
         return next(it)
 
     app.dependency_overrides[get_llm_complete] = lambda: fake_llm
@@ -201,7 +201,7 @@ def test_llm_failure_returns_typed_error_event_not_a_500():
     client, _SessionLocal = make_client()
     headers = auth_headers(client)
 
-    def raising_llm(messages, tools=None):
+    def raising_llm(messages, tools=None, tool_choice=None):
         raise RuntimeError("upstream unavailable")
 
     app.dependency_overrides[get_llm_complete] = lambda: raising_llm

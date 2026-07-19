@@ -14,7 +14,7 @@ def make_session():
 
 
 def fake_llm(content):
-    def _complete(messages, tools=None):
+    def _complete(messages, tools=None, tool_choice=None):
         return LLMResponse(content=content, tool_calls=[])
 
     return _complete

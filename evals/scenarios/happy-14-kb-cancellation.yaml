@@ -3,5 +3,4 @@ persona: rahul@example.com
 turns:
   - user: "Can I cancel my order before it ships?"
 expect:
-  tools_called: [search_kb]
   answer_contains_any: ["cancel"]

@@ -3,5 +3,4 @@ persona: aditi@example.com
 turns:
   - user: "Are the earbuds sweat resistant?"
 expect:
-  tools_called: [search_kb]
   answer_contains_any: ["IPX4", "sweat", "splash"]

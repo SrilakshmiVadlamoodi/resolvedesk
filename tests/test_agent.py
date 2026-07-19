@@ -20,7 +20,7 @@ def make_session():
 def fake_llm(*responses):
     it = iter(responses)
 
-    def _complete(messages, tools=None):
+    def _complete(messages, tools=None, tool_choice=None):
         return next(it)
 
     return _complete
@@ -184,7 +184,7 @@ def test_llm_failure_returns_typed_error_not_a_crash():
     session = make_session()
     aditi = session.query(Customer).filter_by(email="aditi@example.com").one()
 
-    def raising_llm(messages, tools=None):
+    def raising_llm(messages, tools=None, tool_choice=None):
         raise RuntimeError("connection reset by peer")
 
     result = agent.run_turn(
@@ -201,7 +201,7 @@ def test_llm_failure_still_logs_an_event():
     session = make_session()
     aditi = session.query(Customer).filter_by(email="aditi@example.com").one()
 
-    def raising_llm(messages, tools=None):
+    def raising_llm(messages, tools=None, tool_choice=None):
         raise RuntimeError("boom")
 
     agent.run_turn(

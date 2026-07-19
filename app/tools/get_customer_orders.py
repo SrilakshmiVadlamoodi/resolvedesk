@@ -22,6 +22,7 @@ def execute(session, customer_id: int, **_kwargs) -> dict:
                 "status": o.status,
                 "total": float(o.total),
                 "placed_at": o.placed_at.isoformat(),
+                "items": [{"product_name": item.product.name, "qty": item.qty} for item in o.items],
             }
             for o in orders
         ]

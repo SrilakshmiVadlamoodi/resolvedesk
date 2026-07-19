@@ -24,6 +24,17 @@ def test_get_customer_orders_returns_only_that_customers_orders():
     assert all(o["customer_id"] == aditi.id for o in result["orders"])
 
 
+def test_get_customer_orders_includes_item_product_names():
+    session = make_session()
+    seed_domain(session)
+    aditi = session.query(Customer).filter_by(email="aditi@example.com").one()
+
+    result = get_customer_orders.execute(session=session, customer_id=aditi.id)
+
+    delivered_order = next(o for o in result["orders"] if o["status"] == "delivered")
+    assert delivered_order["items"] == [{"product_name": "VoltBuds Pro", "qty": 1}]
+
+
 def test_get_order_details_returns_order_for_owner():
     session = make_session()
     seed_domain(session)
@@ -34,6 +45,7 @@ def test_get_order_details_returns_order_for_owner():
 
     assert result["status"] == "delivered"
     assert result["total"] == 2999
+    assert result["items"] == [{"product_name": "VoltBuds Pro", "qty": 1}]
 
 
 def test_get_order_details_scopes_to_requesting_customer():

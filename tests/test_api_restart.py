@@ -47,7 +47,7 @@ def test_killing_and_restarting_the_backend_preserves_conversation_and_avoids_du
     setup.close()
 
     it1 = iter([LLMResponse(content="Standard shipping takes 3-5 business days.", tool_calls=[])])
-    app.dependency_overrides[get_llm_complete] = lambda: (lambda messages, tools=None: next(it1))
+    app.dependency_overrides[get_llm_complete] = lambda: (lambda messages, tools=None, tool_choice=None: next(it1))
 
     client1 = TestClient(app)
     token_resp = client1.post("/auth/demo", json={})
@@ -71,7 +71,7 @@ def test_killing_and_restarting_the_backend_preserves_conversation_and_avoids_du
     _wire_app(engine2)
 
     it2 = iter([LLMResponse(content="You're welcome!", tool_calls=[])])
-    app.dependency_overrides[get_llm_complete] = lambda: (lambda messages, tools=None: next(it2))
+    app.dependency_overrides[get_llm_complete] = lambda: (lambda messages, tools=None, tool_choice=None: next(it2))
 
     client2 = TestClient(app)
     history = client2.get(f"/conversations/{conversation_id}", headers=headers)

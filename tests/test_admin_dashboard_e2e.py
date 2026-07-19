@@ -44,7 +44,7 @@ def teardown_function(_function):
 def set_llm(*responses):
     it = iter(responses)
 
-    def fake_llm(messages, tools=None):
+    def fake_llm(messages, tools=None, tool_choice=None):
         return next(it)
 
     app.dependency_overrides[get_llm_complete] = lambda: fake_llm

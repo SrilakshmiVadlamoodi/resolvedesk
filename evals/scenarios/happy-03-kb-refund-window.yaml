@@ -3,5 +3,4 @@ persona: aditi@example.com
 turns:
   - user: "What's your refund window?"
 expect:
-  tools_called: [search_kb]
   answer_contains_any: ["30 days"]

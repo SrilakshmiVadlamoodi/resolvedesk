@@ -2,11 +2,12 @@ from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
-    llm_provider: str = "anthropic"
+    llm_provider: str = "openrouter"
     anthropic_api_key: str = ""
     gemini_api_key: str = ""
     github_models_token: str = ""
     together_api_key: str = ""
+    openrouter_api_key: str = ""
     database_url: str = "sqlite:///./data/resolvedesk.db"
     session_secret: str = "dev-only-insecure-secret-change-me"
     allowed_origins: str = "http://localhost:5173"

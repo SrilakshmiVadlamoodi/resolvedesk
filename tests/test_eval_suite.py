@@ -27,7 +27,7 @@ def test_run_suite_runs_every_scenario_and_aggregates_pass_rate(tmp_path):
     def factory(scenario_id):
         it = iter(responses[scenario_id])
 
-        def _complete(messages, tools=None):
+        def _complete(messages, tools=None, tool_choice=None):
             return next(it)
 
         return _complete

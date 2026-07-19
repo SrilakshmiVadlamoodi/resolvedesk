@@ -8,14 +8,18 @@ can't or shouldn't act on its own. See `docs/specs/mission.md` for the full pitc
 
 ## LLM provider
 
-**Anthropic (Claude Haiku 4.5) is the default and primary provider** — used for the
-eval suite, the live demo, and the final submission. Together AI (Llama 3.3 70B
-Instruct Turbo), GitHub Models (GPT-4.1), and Gemini remain fully implemented and
-selectable for dev-time comparison — the provider abstraction lives entirely in
-`app/llm.py`, so switching is one environment variable:
+**OpenRouter (Claude Haiku 4.5) is the default and primary provider** — used for the
+eval suite, the live demo, and the final submission. It's reached via OpenRouter's
+OpenAI-compatible `chat.completions` API (`base_url=https://openrouter.ai/api/v1`,
+model `anthropic/claude-haiku-4.5`), so no extra SDK is required beyond the `openai`
+client already used by this project's tooling. Direct Anthropic access, Together AI
+(Llama 3.3 70B Instruct Turbo), GitHub Models (GPT-4.1), and Gemini remain fully
+implemented and selectable for dev-time comparison — the provider abstraction lives
+entirely in `app/llm.py`, so switching is one environment variable:
 
 ```bash
-LLM_PROVIDER=anthropic   # default — Claude Haiku 4.5, used for real eval numbers/submission
+LLM_PROVIDER=openrouter  # default — Claude Haiku 4.5 via OpenRouter, used for real eval numbers/submission
+LLM_PROVIDER=anthropic   # optional — Claude Haiku 4.5 via direct Anthropic API
 LLM_PROVIDER=together    # optional — Llama 3.3 70B Instruct Turbo via Together AI
 LLM_PROVIDER=github      # optional — GPT-4.1 via GitHub Models
 LLM_PROVIDER=gemini      # optional — cheap local sanity checks only, see caveat below
@@ -23,7 +27,8 @@ LLM_PROVIDER=gemini      # optional — cheap local sanity checks only, see cave
 
 Set the corresponding API key:
 
-- `ANTHROPIC_API_KEY` — required (default provider)
+- `OPENROUTER_API_KEY` — required (default provider)
+- `ANTHROPIC_API_KEY` — only needed if you set `LLM_PROVIDER=anthropic`
 - `TOGETHER_API_KEY` — only needed if you set `LLM_PROVIDER=together`
 - `GITHUB_MODELS_TOKEN` — only needed if you set `LLM_PROVIDER=github`; a GitHub PAT
   with the `models` scope
@@ -48,7 +53,7 @@ for a full eval run. See
 
 ```bash
 uv sync
-cp .env.example .env   # fill in ANTHROPIC_API_KEY
+cp .env.example .env   # fill in OPENROUTER_API_KEY
 uv run python -m data.seed
 uv run uvicorn app.main:app --reload
 ```
@@ -64,6 +69,18 @@ uv run python -m evals.run --subset smoke
 
 Eval pass rate is recorded per-provider in the relevant feature's `validate.md` under
 `docs/specs/features/`.
+
+## Eval results and a real tradeoff
+
+The default provider (Claude Haiku 4.5 via OpenRouter) scores **67.3% (35/52)** on the
+full eval suite — below the 90% target. The gap is a known, diagnosed model behavior
+(Haiku sometimes explains an outcome in prose or asks a clarifying question instead of
+calling the required tool, even when instructed to call it first), not a hidden bug —
+see `docs/specs/features/2026-07-19-f10-openrouter-haiku-provider/validate.md` for the
+full root-cause writeup and the two mitigations attempted. We assess Claude Sonnet 4.6
+would likely score higher here, but didn't switch for submission: remaining API budget
+($3.87) covered at most one full Sonnet eval run with no margin for a retry or live
+demo traffic, so we kept the known-working, fully-tested Haiku setup instead.
 
 ## Project structure
 

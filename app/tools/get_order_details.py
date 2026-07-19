@@ -32,4 +32,5 @@ def execute(session, customer_id: int, order_id: int, **_kwargs) -> dict:
         "shipping_address": order.shipping_address,
         "placed_at": order.placed_at.isoformat(),
         "delivered_at": order.delivered_at.isoformat() if order.delivered_at else None,
+        "items": [{"product_name": item.product.name, "qty": item.qty} for item in order.items],
     }
