@@ -28,8 +28,7 @@ Every choice optimizes for: solo developer, 12 days, free tier, and zero unfamil
 
 | Concern | Choice | Why |
 |---|---|---|
-| Backend hosting | Render free tier (Docker) | Free, supports background processes; cold starts are acceptable (mitigated by a pinger before demo) |
-| Frontend hosting | Vercel | Free, instant deploys, judges get a clickable link |
+| Hosting | Deferred — local-only for this submission | A live URL is optional per the hackathon rules; the demo video shows the app running locally (`uv run uvicorn` + `npm run dev`). Render (backend) + Vercel (frontend) remain the planned next step if a public deploy is needed later. |
 | Dev workflow | Claude Code + this SDD package, project at `C:\dev\resolvedesk` | Known-good Windows setup (avoids the OneDrive/uv hardlink issue) |
 | Package mgmt | `uv` for Python, `npm` for web | Fast installs |
 | Testing | `pytest` for unit tests; custom eval runner in `evals/` | Eval suite is a first-class feature, not an afterthought |

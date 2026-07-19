@@ -1,5 +1,12 @@
 # Deployment — Render (backend)
 
+**Status: deferred for this submission.** A live URL is optional per the FlowZint
+hackathon rules, and the submission demo runs locally instead (`uv run uvicorn` +
+`npm run dev`), recorded in the demo video. Everything below is kept as the known
+next step if a public deploy is needed later — it has not been re-verified against
+the current default provider (`openrouter`, see `README.md`) and should be reviewed
+before actually deploying.
+
 ## Environment variables
 
 | Variable | Required | Notes |

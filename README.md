@@ -6,6 +6,10 @@ knowledge base, takes real actions (order lookup, refunds, address changes) via 
 calls bounded by a policy engine, and escalates to a human with full context when it
 can't or shouldn't act on its own. See `docs/specs/mission.md` for the full pitch.
 
+**No live URL for this submission** — a public deploy is optional per the FlowZint
+rules, so this runs locally only; the submitted demo video shows it running via the
+commands below. See `docs/specs/deployment.md` for the deferred Render/Vercel plan.
+
 ## LLM provider
 
 **OpenRouter (Claude Haiku 4.5) is the default and primary provider** — used for the
@@ -51,12 +55,27 @@ for a full eval run. See
 
 ## Running locally
 
+Backend:
+
 ```bash
 uv sync
 cp .env.example .env   # fill in OPENROUTER_API_KEY
 uv run python -m data.seed
-uv run uvicorn app.main:app --reload
+uv run uvicorn app.main:app --reload   # http://localhost:8000
 ```
+
+Frontend (separate terminal):
+
+```bash
+cd web
+npm install
+cp .env.example .env   # VITE_API_BASE_URL defaults to http://localhost:8000
+npm run dev             # http://localhost:5173
+```
+
+Open `http://localhost:5173` — the frontend talks to the backend at
+`VITE_API_BASE_URL`, and the backend's `ALLOWED_ORIGINS` (`.env`, defaults to
+`http://localhost:5173`) must include wherever the frontend is actually running.
 
 ## Tests and evals
 

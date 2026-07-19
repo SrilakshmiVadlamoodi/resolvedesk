@@ -50,9 +50,13 @@ Each day ends with a working commit. Milestones M1–M4 are the "still on track?
 ## Phase 4 — Ship (Days 11–12)
 
 **Day 11**
-- Deploy backend (Render) + frontend (Vercel). Re-run evals against prod.
+- Deployment deferred for this submission — a live URL is optional per the FlowZint
+  rules. Run locally (`uv run uvicorn` + `npm run dev`) and re-run evals locally.
+  Render (backend) + Vercel (frontend) remain the plan if a public deploy is needed
+  later.
 - README: problem → demo GIF → architecture diagram → eval results → run instructions.
-- Record 2.5-min demo video (assume live demos fail): 20s problem, 90s the three flows, 30s dashboard + eval numbers, 10s close.
+- Record 2.5-min demo video (local run, since there's no live URL): 20s problem, 90s
+  the three flows, 30s dashboard + eval numbers, 10s close.
 
 **Day 12 — buffer**
 - Fix anything broken; dry-run the pitch twice; **submit on the FlowZint portal by mid-day, never the last hour.**
@@ -65,4 +69,4 @@ Cut in this order — each cut keeps the demo intact:
 3. Sentiment-based escalation (keep rule-based triggers)
 4. Eval suite shrinks 50 → 25 scenarios (never cut to zero — it's the differentiator)
 
-**Never cut:** policy engine, escalation, the refund flow, deployment, the video.
+**Never cut:** policy engine, escalation, the refund flow, the demo video.
