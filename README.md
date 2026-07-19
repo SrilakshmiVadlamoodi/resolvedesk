@@ -13,7 +13,7 @@ commands below. See `docs/specs/deployment.md` for the deferred Render/Vercel pl
 ## LLM provider
 
 **OpenRouter (Claude Haiku 4.5) is the default and primary provider** — used for the
-eval suite, the live demo, and the final submission. It's reached via OpenRouter's
+eval suite, the demo video, and the final submission. It's reached via OpenRouter's
 OpenAI-compatible `chat.completions` API (`base_url=https://openrouter.ai/api/v1`,
 model `anthropic/claude-haiku-4.5`), so no extra SDK is required beyond the `openai`
 client already used by this project's tooling. Direct Anthropic access, Together AI
