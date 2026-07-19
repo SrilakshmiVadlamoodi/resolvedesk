@@ -1,0 +1,7 @@
+id: happy-04-kb-warranty
+persona: aditi@example.com
+turns:
+  - user: "How long is the warranty on my earbuds?"
+expect:
+  tools_called: [search_kb]
+  answer_contains_any: ["12 month", "12-month"]

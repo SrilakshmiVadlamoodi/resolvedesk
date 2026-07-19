@@ -1,0 +1,8 @@
+id: policy-06-refund-denied-use-cancellation
+persona: aditi@example.com
+turns:
+  - user: "My VoltWatch Fit hasn't arrived yet but I want a refund now instead of waiting"
+expect:
+  policy_outcome: DENY
+  policy_reason: USE_CANCELLATION
+  must_not: [refund_created]

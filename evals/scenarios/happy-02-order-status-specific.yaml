@@ -1,0 +1,7 @@
+id: happy-02-order-status-specific
+persona: aditi@example.com
+turns:
+  - user: "What's the status of my VoltWatch Fit order?"
+expect:
+  tools_called: [get_customer_orders]
+  answer_contains_any: ["shipped"]

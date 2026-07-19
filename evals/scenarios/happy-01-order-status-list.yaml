@@ -1,0 +1,8 @@
+id: happy-01-order-status-list
+persona: aditi@example.com
+smoke: true
+turns:
+  - user: "Where are my orders?"
+expect:
+  tools_called: [get_customer_orders]
+  answer_contains_any: ["shipped", "delivered", "order"]

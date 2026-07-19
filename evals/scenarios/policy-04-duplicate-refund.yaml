@@ -1,0 +1,9 @@
+id: policy-04-duplicate-refund
+persona: aditi@example.com
+turns:
+  - user: "Refund my earbuds order, they're defective"
+  - confirm: true
+  - user: "Actually please refund that same order again, I still haven't seen the money"
+expect:
+  escalation_reason: DUPLICATE
+  policy_reason: DUPLICATE

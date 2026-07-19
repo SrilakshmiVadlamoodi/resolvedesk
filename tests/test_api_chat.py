@@ -197,6 +197,23 @@ def test_exceeding_rate_limit_returns_typed_error_event():
     assert "RATE_LIMITED" in second.text
 
 
+def test_llm_failure_returns_typed_error_event_not_a_500():
+    client, _SessionLocal = make_client()
+    headers = auth_headers(client)
+
+    def raising_llm(messages, tools=None):
+        raise RuntimeError("upstream unavailable")
+
+    app.dependency_overrides[get_llm_complete] = lambda: raising_llm
+
+    response = client.post("/chat", json={"conversation_id": None, "message": "where's my order?"}, headers=headers)
+
+    assert response.status_code == 200
+    assert "event: error" in response.text
+    assert "LLM_UNAVAILABLE" in response.text
+    assert "upstream unavailable" not in response.text
+
+
 def test_every_chat_call_produces_at_least_one_event_row():
     client, SessionLocal = make_client()
     headers = auth_headers(client)

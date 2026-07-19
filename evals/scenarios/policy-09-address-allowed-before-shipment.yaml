@@ -1,0 +1,9 @@
+id: policy-09-address-allowed-before-shipment
+persona: rahul@example.com
+turns:
+  - user: "Please update the delivery address on my VoltPlug Mini order to 22 Camac Street, Kolkata, it hasn't shipped yet"
+  - confirm: true
+expect:
+  tools_called: [update_shipping_address]
+  policy_outcome: ALLOW
+  answer_contains_any: ["updated", "address"]

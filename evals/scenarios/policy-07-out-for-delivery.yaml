@@ -1,0 +1,9 @@
+id: policy-07-out-for-delivery
+persona: aditi@example.com
+turns:
+  - user: "My VoltPlug Mini is out for delivery right now but I already want to refund it"
+expect:
+  policy_outcome: ESCALATE
+  escalation_reason: OUT_FOR_DELIVERY
+  policy_reason: OUT_FOR_DELIVERY
+  must_not: [refund_created]

@@ -6,12 +6,12 @@ Every choice optimizes for: solo developer, 12 days, free tier, and zero unfamil
 
 | Concern | Choice | Why |
 |---|---|---|
-| Language / framework | Python 3.12 + FastAPI | Already fluent; async-native for streaming; automatic OpenAPI docs impress judges for free |
+| Language / framework | Python 3.12 + FastAPI | Already fluent; async-native for streaming; automatic OpenAPI docs for free |
 | Data | SQLite + SQLAlchemy 2.0 | Zero-ops, single file, reproducible via `python -m data.seed`; scale story = "swap connection string for Postgres" |
-| LLM | Claude API (`claude-sonnet-4-6`) via `app/llm.py` abstraction | Best tool-calling reliability; abstraction layer means Gemini free tier is a 1-file fallback if credits run out |
+| LLM | Gemini API (`gemini-2.5-flash`) via `app/llm.py` abstraction, primary/default (F-008) | Abstraction layer proved out as a real 1-file swap, not just a fallback story; Claude (`claude-sonnet-4-6`) stays fully implemented and selectable via `LLM_PROVIDER=anthropic` for comparison |
 | Tool calling | Native LLM tool-use API, tools defined as JSON schemas in `app/tools/` | No agent framework (LangChain/CrewAI) — frameworks hide the loop, and the loop *is* the interview story |
 | RAG embeddings | `sentence-transformers` (`all-MiniLM-L6-v2`), local | Free, fast, no API dependency; 384-dim vectors fine for a ~40-doc KB |
-| Vector store | SQLite table + numpy cosine similarity | At KB scale (< 500 chunks) brute force is < 5 ms; adding a vector DB would be resume-driven overengineering |
+| Vector store | SQLite table + numpy cosine similarity | At KB scale (< 500 chunks) brute force is < 5 ms; adding a vector DB would be overengineering |
 | Conversation state | `conversations` + `messages` tables | Server-side history; conversation resumes across page reloads |
 | Event log | Append-only `events` table (tool calls, escalations, policy decisions) | Single source of truth for dashboard + debugging + demo traces |
 

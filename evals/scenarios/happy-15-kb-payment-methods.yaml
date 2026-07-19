@@ -1,0 +1,7 @@
+id: happy-15-kb-payment-methods
+persona: aditi@example.com
+turns:
+  - user: "What payment methods do you accept?"
+expect:
+  tools_called: [search_kb]
+  answer_contains_any: ["UPI", "credit", "debit", "net banking"]

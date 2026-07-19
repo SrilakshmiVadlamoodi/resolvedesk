@@ -1,0 +1,7 @@
+id: escalation-06-window-expired-honest-message
+persona: aditi@example.com
+turns:
+  - user: "It's been way more than two weeks since my earbuds were delivered but I still want a refund"
+expect:
+  escalation_reason: WINDOW_EXPIRED
+  answer_contains_any: ["raised this with our team", "support team", "reference"]

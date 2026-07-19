@@ -72,6 +72,36 @@
 - Demo-token storage mechanism (signed/stateless vs. server-side map) — see above.
 - No real per-message token-by-token SSE streaming — see above.
 
+## Post-hoc fix: LLM call-site errors were surfacing as raw 500s
+
+Found during F-009 (chat UI) manual verification: `_run_loop`'s `llm_complete(...)`
+call (in `app/agent.py`, invoked from both `run_turn` and `confirm_action`) had no
+error handling, so a provider/network failure — missing API key, timeout, upstream API
+error — propagated as an unhandled exception and FastAPI returned a bare `Internal
+Server Error`, not the typed `error` SSE event AC6 requires. Only the rate-limit path
+had a typed error; a failed LLM call did not.
+
+Fixed with a narrow `try/except Exception` around that one call site: catches the
+failure, logs an `llm_error` event (server-side only, includes the raw exception string
+for debugging — never sent to the customer), and returns
+`TurnResult(error="LLM_UNAVAILABLE", text="I'm having trouble connecting right now —
+please try again in a moment.")`, which `_turn_result_to_sse` already turns into a
+typed `error` SSE event via the existing `elif result.error:` branch — no changes
+needed to `app/api.py` itself.
+
+This also required a one-line fix to `evals/runner.py`: it previously relied on the
+exception *propagating* to flag a broken LLM call as a scenario failure; since
+`agent.py` now catches it internally, `run_scenario` gained an explicit
+`if last_result.error: return ScenarioResult(..., passed=False, ...)` check so a
+broken-LLM eval scenario still fails the suite instead of silently passing.
+
+Tests: `tests/test_agent.py::test_llm_failure_returns_typed_error_not_a_crash`,
+`::test_llm_failure_still_logs_an_event`;
+`tests/test_api_chat.py::test_llm_failure_returns_typed_error_event_not_a_500`;
+`tests/test_eval_runner.py::test_an_exception_from_llm_complete_is_recorded_as_a_failure_not_raised`
+(pre-existing, updated expectation to match the new `detail` payload field rather than
+a raised exception's message).
+
 ## Follow-ups (not blocking F-007)
 
 - `PendingAction` rows are never garbage-collected once expired (only deleted on

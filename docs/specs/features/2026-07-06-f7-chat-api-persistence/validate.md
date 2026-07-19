@@ -76,3 +76,33 @@ hackathon-scale demo" allowance.
 7/7 acceptance criteria PASS. Feature complete per spec, with the demo-token mechanism
 and streaming granularity documented as deliberate interpretations in
 implementation.md.
+
+## Post-hoc fix validation (LLM call-site errors)
+
+Found during F-009 manual testing: an exception from the LLM call (missing key,
+timeout, provider error) crashed `POST /chat` with a raw 500 instead of AC6's typed
+`error` event — AC6 as originally verified above only covered the rate-limit path.
+Fixed in `app/agent.py` (see implementation.md, "Post-hoc fix" section).
+
+- `uv run pytest -q` — 150/150 passed (147 prior + 3 new:
+  `test_llm_failure_returns_typed_error_not_a_crash`,
+  `test_llm_failure_still_logs_an_event` in `tests/test_agent.py`;
+  `test_llm_failure_returns_typed_error_event_not_a_500` in `tests/test_api_chat.py`).
+  One pre-existing eval-suite test's assertion was updated
+  (`tests/test_eval_runner.py::test_an_exception_from_llm_complete_is_recorded_as_a_failure_not_raised`)
+  to match the new graceful-catch behavior — see below.
+- `uv run ruff check app tests evals` — all checks passed.
+- Live manual check: `POST /chat` against a running server with no `ANTHROPIC_API_KEY`
+  now returns `event: error` / `data: {"code": "LLM_UNAVAILABLE", "message": "I'm
+  having trouble connecting right now — please try again in a moment."}` followed by
+  `event: done` — no 500, no stack trace, no internal detail in the customer-facing
+  message.
+- **Side effect caught and fixed**: `evals/runner.py`'s `run_scenario` previously
+  relied on the LLM exception *propagating* to flag a broken-provider scenario as a
+  failure. Since `agent.py` now catches it internally, that safety net stopped firing —
+  a scenario with a raising fake LLM was passing when it should fail. Added an explicit
+  `if last_result.error: return ScenarioResult(..., passed=False, ...)` check in
+  `run_scenario`, plus an `Event(type="llm_error", payload={"step", "detail": str(exc)})`
+  log (server-side only, never sent to the customer) so the eval failure message still
+  carries the original exception text for debugging — restoring the diagnostic value
+  the old exception-based path had, without leaking it to `POST /chat` callers.

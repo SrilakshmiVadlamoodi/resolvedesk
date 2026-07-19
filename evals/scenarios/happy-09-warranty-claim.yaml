@@ -1,0 +1,8 @@
+id: happy-09-warranty-claim
+persona: aditi@example.com
+turns:
+  - user: "My VoltWatch Fit won't turn on, can you file a warranty claim?"
+  - confirm: true
+expect:
+  tools_called: [file_warranty_claim]
+  answer_contains_any: ["claim", "warranty"]

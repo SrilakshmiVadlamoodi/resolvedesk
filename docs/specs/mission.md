@@ -23,10 +23,9 @@ ResolveDesk is an agentic support system for VoltKart, a fictional D2C electroni
 - **Secondary (business persona):** VoltKart support leads who monitor the dashboard and work the escalation queue.
 - **Actual audience:** FlowZint judges evaluating innovation, real-world problem solving, AI automation, UX, and scalability.
 
-## What winning looks like
+## What success looks like
 
-- **Hackathon:** top-3 finish. The pitch lands because the agent visibly *does things* (a refund appears in the mock backend live) and because we show eval numbers (≥ 90% pass rate on a 50-scenario suite) — evidence of engineering rigor no other solo entry will have.
-- **Resume:** one deployed, public-repo project demonstrating agentic tool use, RAG, guardrails, and evaluation — the four skills product companies actually screen for in AI roles.
+The agent visibly *does things* (a refund appears in the mock backend live) and we show eval numbers (≥ 90% pass rate on a 50-scenario suite) as evidence of engineering rigor.
 
 ## Explicit non-goals
 
@@ -38,4 +37,4 @@ ResolveDesk is an agentic support system for VoltKart, a fictional D2C electroni
 
 ## Guiding principle
 
-Every design decision is judged by one question: *does this make the 3-minute demo more convincing or the resume story stronger?* If neither, it's backlog.
+Every design decision is judged by one question: *does this make the 3-minute demo more convincing?* If not, it's backlog.

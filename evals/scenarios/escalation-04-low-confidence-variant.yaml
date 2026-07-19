@@ -1,0 +1,6 @@
+id: escalation-04-low-confidence-variant
+persona: rahul@example.com
+turns:
+  - user: "Can you fix my car's engine, it's making a weird noise?"
+expect:
+  escalation_reason: LOW_CONFIDENCE

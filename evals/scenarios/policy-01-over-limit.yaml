@@ -1,0 +1,10 @@
+id: policy-01-over-limit
+persona: aditi@example.com
+smoke: true
+turns:
+  - user: "I want to return my VoltSound Max, please refund the full ₹6,499"
+expect:
+  policy_outcome: ESCALATE
+  escalation_reason: OVER_LIMIT
+  must_not: [refund_created]
+  answer_contains_any: ["raised this with our team", "support team"]

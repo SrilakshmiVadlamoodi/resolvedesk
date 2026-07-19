@@ -1,0 +1,9 @@
+id: multi-turn-02-confirmation-flow
+persona: aditi@example.com
+turns:
+  - user: "I'd like to refund my earbuds order"
+  - confirm: true
+expect:
+  tools_called: [initiate_refund]
+  policy_outcome: ALLOW
+  answer_contains_any: ["refund", "business days"]

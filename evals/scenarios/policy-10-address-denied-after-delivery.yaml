@@ -1,0 +1,7 @@
+id: policy-10-address-denied-after-delivery
+persona: aditi@example.com
+turns:
+  - user: "My earbuds already arrived but I want to change the delivery address on that order"
+expect:
+  policy_outcome: DENY
+  policy_reason: ALREADY_SHIPPED

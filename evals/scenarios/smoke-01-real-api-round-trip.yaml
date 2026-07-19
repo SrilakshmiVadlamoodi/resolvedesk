@@ -1,0 +1,12 @@
+# AC4: at least 1-2 smoke scenarios must assert a bare real-API round-trip
+# succeeds (auth + request + response parsing), independent of behavioral
+# correctness. This scenario intentionally has no tools_called/policy/answer
+# content assertions — it only proves app/llm.py:complete() came back with a
+# real, non-empty answer and no exception.
+id: smoke-01-real-api-round-trip
+persona: aditi@example.com
+smoke: true
+turns:
+  - user: "Hello, are you there?"
+expect:
+  api_round_trip: true

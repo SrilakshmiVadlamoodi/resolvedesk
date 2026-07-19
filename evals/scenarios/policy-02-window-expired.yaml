@@ -1,0 +1,8 @@
+id: policy-02-window-expired
+persona: aditi@example.com
+turns:
+  - user: "I want a refund on the earbuds I received over two weeks ago, they stopped working"
+expect:
+  policy_outcome: ESCALATE
+  escalation_reason: WINDOW_EXPIRED
+  must_not: [refund_created]

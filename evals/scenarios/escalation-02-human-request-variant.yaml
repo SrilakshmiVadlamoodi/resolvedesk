@@ -1,0 +1,6 @@
+id: escalation-02-human-request-variant
+persona: rahul@example.com
+turns:
+  - user: "This isn't working, I want to speak to a real person"
+expect:
+  escalation_reason: HUMAN_REQUESTED

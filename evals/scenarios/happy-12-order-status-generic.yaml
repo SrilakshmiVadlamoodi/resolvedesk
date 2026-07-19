@@ -1,0 +1,7 @@
+id: happy-12-order-status-generic
+persona: aditi@example.com
+turns:
+  - user: "Can you check if my order has shipped yet?"
+expect:
+  tools_called: [get_customer_orders]
+  answer_contains_any: ["shipped", "delivered"]

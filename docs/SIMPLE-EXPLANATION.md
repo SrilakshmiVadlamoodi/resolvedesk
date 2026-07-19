@@ -22,16 +22,12 @@ Think of a restaurant:
 ## What each file in this package is for
 
 - **CLAUDE.md (the constitution)** — the house rules for the AI coding assistant building this. Like a team lead's standing instructions: "always check the spec first, never let the AI touch money directly, don't add features we didn't plan."
-- **mission.md** — *why* we're building this and what winning looks like. Keeps every decision pointed at two goals: top-3 finish and a strong resume story.
+- **mission.md** — *why* we're building this and what success looks like. Keeps every decision pointed at making the demo convincing.
 - **tech-stack.md** — the shopping list of technologies, each with a one-line reason. The theme: boring, free, already-known tools everywhere except the one place we want to shine (the agent itself).
 - **architecture.md** — the floor plan. How a message travels: chat → agent → rulebook → kitchen → database → back to you. Also the safety locks (a customer can only ever see their *own* orders — enforced by the server, not by trusting the AI).
 - **roadmap.md** — the 12-day calendar. Days 1–2 build the foundations, 3–5 make it talk and look things up, 6–7 give it hands (refunds) and judgment (escalation), 8–10 make it pretty and prove it works, 11–12 put it on the internet, film it, and submit early. It also lists what to cut first if time runs short — deciding that *now* beats panicking on day 10.
 - **features/001–006** — one contract per feature: what it does, how we'll know it's done ("acceptance criteria"), and what we're deliberately *not* doing. When you tell Claude Code "build feature 003," this is what it reads.
 
-## Why this can finish top 3
+## What makes this different
 
-Most solo hackathon entries are the recipe-book-only waiter: they can answer questions but can't act. Yours takes actions, has hard-coded limits a jailbreak can't cross, hands off to humans gracefully, shows the business a live dashboard, and comes with test scores. Each of those is one sentence in a pitch — together they sound like a product built by a team, shipped by one person in 12 days.
-
-## Why this belongs on a resume
-
-Companies hiring for AI roles look for exactly four things this project demonstrates: making an LLM use tools safely, grounding answers in real data (RAG), putting guardrails around AI behavior, and *measuring* whether the AI actually works (evals). The last one is the rarest skill — and you'll have a report file to prove it.
+Most solo hackathon entries are the recipe-book-only waiter: they can answer questions but can't act. This one takes actions, has hard-coded limits a jailbreak can't cross, hands off to humans gracefully, shows the business a live dashboard, and comes with test scores. Each of those is one sentence in a pitch — together they sound like a product built by a team, shipped by one person in 12 days.

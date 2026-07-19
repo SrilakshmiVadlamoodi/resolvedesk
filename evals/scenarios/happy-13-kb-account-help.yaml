@@ -1,0 +1,7 @@
+id: happy-13-kb-account-help
+persona: aditi@example.com
+turns:
+  - user: "How do I update my saved address on my account?"
+expect:
+  tools_called: [search_kb]
+  answer_contains_any: ["account", "address"]

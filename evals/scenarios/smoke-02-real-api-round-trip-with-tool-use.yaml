@@ -1,0 +1,12 @@
+# AC4 (second round-trip check): same idea as smoke-01, but forces a
+# tool-use turn so the response-parsing path for tool_use blocks
+# (app/llm.py:complete()'s block-parsing loop) is also exercised for real,
+# not just the plain-text path.
+id: smoke-02-real-api-round-trip-with-tool-use
+persona: aditi@example.com
+smoke: true
+turns:
+  - user: "Please list my orders."
+expect:
+  tools_called: [get_customer_orders]
+  api_round_trip: true

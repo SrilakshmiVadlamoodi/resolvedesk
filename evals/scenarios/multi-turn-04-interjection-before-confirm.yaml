@@ -1,0 +1,9 @@
+id: multi-turn-04-interjection-before-confirm
+persona: aditi@example.com
+turns:
+  - user: "Refund my earbuds order please"
+  - user: "Actually wait, what's your warranty policy first?"
+  - confirm: true
+expect:
+  tools_called: [initiate_refund]
+  must_not: []

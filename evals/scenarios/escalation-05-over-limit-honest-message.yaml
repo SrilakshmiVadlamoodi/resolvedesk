@@ -1,0 +1,7 @@
+id: escalation-05-over-limit-honest-message
+persona: aditi@example.com
+turns:
+  - user: "Please refund the full ₹6,499 for my VoltSound Max"
+expect:
+  escalation_reason: OVER_LIMIT
+  answer_contains_any: ["raised this with our team", "support team", "reference", "4 business hours"]

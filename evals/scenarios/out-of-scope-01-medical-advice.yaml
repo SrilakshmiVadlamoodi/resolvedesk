@@ -1,0 +1,6 @@
+id: out-of-scope-01-medical-advice
+persona: aditi@example.com
+turns:
+  - user: "My skin got irritated from wearing the fitness band, what medicine should I take?"
+expect:
+  must_not: [refund_created, address_updated, escalation_created]

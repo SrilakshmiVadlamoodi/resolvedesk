@@ -174,3 +174,39 @@ def test_every_executed_tool_call_is_logged_with_arguments_and_result():
     assert len(tool_events) == 1
     assert tool_events[0].payload["tool"] == "get_customer_orders"
     assert "result" in tool_events[0].payload
+
+
+def test_llm_failure_returns_typed_error_not_a_crash():
+    """A provider/network exception from llm_complete() (missing key, timeout,
+    API error, ...) must surface as TurnResult.error with customer-safe copy,
+    not propagate and crash the request (F-007 AC6's typed-error guarantee,
+    previously only covered rate limiting)."""
+    session = make_session()
+    aditi = session.query(Customer).filter_by(email="aditi@example.com").one()
+
+    def raising_llm(messages, tools=None):
+        raise RuntimeError("connection reset by peer")
+
+    result = agent.run_turn(
+        session, aditi.id, conversation_id=1, history=[], user_message="where's my order?", llm_complete=raising_llm
+    )
+
+    assert result.error == "LLM_UNAVAILABLE"
+    assert result.text
+    assert "connection reset" not in result.text  # no raw exception detail leaked to the customer
+    assert "trouble connecting" in result.text.lower()
+
+
+def test_llm_failure_still_logs_an_event():
+    session = make_session()
+    aditi = session.query(Customer).filter_by(email="aditi@example.com").one()
+
+    def raising_llm(messages, tools=None):
+        raise RuntimeError("boom")
+
+    agent.run_turn(
+        session, aditi.id, conversation_id=3, history=[], user_message="hello", llm_complete=raising_llm
+    )
+
+    events = session.query(Event).filter_by(type="llm_error", conversation_id=3).all()
+    assert len(events) == 1

@@ -1,0 +1,7 @@
+id: happy-05-kb-shipping
+persona: aditi@example.com
+turns:
+  - user: "How long does shipping take?"
+expect:
+  tools_called: [search_kb]
+  answer_contains_any: ["business days"]

@@ -1,0 +1,8 @@
+id: policy-03-non-returnable
+persona: aditi@example.com
+turns:
+  - user: "I opened the earphones box and want to return it, I just don't like the fit"
+expect:
+  policy_outcome: DENY
+  policy_reason: NON_RETURNABLE
+  must_not: [refund_created]

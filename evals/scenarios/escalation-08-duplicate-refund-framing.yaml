@@ -1,0 +1,8 @@
+id: escalation-08-duplicate-refund-framing
+persona: aditi@example.com
+turns:
+  - user: "Refund my earbuds order, it broke"
+  - confirm: true
+  - user: "I never actually received that refund money, please send it again"
+expect:
+  escalation_reason: DUPLICATE

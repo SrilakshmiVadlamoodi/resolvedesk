@@ -1,0 +1,6 @@
+id: escalation-03-low-confidence
+persona: aditi@example.com
+turns:
+  - user: "Do you sell industrial generators?"
+expect:
+  escalation_reason: LOW_CONFIDENCE

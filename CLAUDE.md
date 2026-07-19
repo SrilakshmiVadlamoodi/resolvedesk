@@ -19,7 +19,7 @@ ResolveDesk is an agentic customer-support platform built solo for FlowZint AI H
 - All tools the agent can call are defined in `app/tools/` — one file per tool, each with: a JSON schema, an execute function, and a `requires_confirmation` flag.
 - SQLite via SQLAlchemy. Schema changes require updating `data/seed.py` so the demo database stays reproducible with one command.
 - Every tool execution and escalation is written to the `events` table — the dashboard is built entirely from this table.
-- Secrets only via environment variables (`.env`, gitignored). The repo must be safe to make public — it goes on the resume.
+- Secrets only via environment variables (`.env`, gitignored). The repo must be safe to make public.
 - Commit after each working increment with conventional-commit messages (`feat:`, `fix:`, `spec:`).
 
 ## Definition of done (per feature)

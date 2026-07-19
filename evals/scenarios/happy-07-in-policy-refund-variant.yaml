@@ -1,0 +1,9 @@
+id: happy-07-in-policy-refund-variant
+persona: aditi@example.com
+turns:
+  - user: "My earbuds arrived but they're the wrong color, can I get my money back?"
+  - confirm: true
+expect:
+  tools_called: [initiate_refund]
+  policy_outcome: ALLOW
+  answer_contains_any: ["refund"]

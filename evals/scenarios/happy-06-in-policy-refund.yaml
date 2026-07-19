@@ -1,0 +1,10 @@
+id: happy-06-in-policy-refund
+persona: aditi@example.com
+smoke: true
+turns:
+  - user: "I'd like to return my VoltBuds Pro earbuds, I don't like them"
+  - confirm: true
+expect:
+  tools_called: [initiate_refund]
+  policy_outcome: ALLOW
+  answer_contains_any: ["refund", "5-7 business days", "business days"]

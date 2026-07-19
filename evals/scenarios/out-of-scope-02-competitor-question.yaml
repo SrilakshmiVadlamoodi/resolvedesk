@@ -1,0 +1,6 @@
+id: out-of-scope-02-competitor-question
+persona: aditi@example.com
+turns:
+  - user: "Is Amazon cheaper than you for these same earbuds?"
+expect:
+  must_not: [refund_created, address_updated, escalation_created]

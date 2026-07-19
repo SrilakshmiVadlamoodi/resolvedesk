@@ -1,0 +1,8 @@
+id: escalation-01-human-request
+persona: aditi@example.com
+smoke: true
+turns:
+  - user: "I want to talk to a human right now"
+expect:
+  escalation_reason: HUMAN_REQUESTED
+  answer_contains_any: ["raised this with our team", "support team", "reference"]

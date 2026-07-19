@@ -1,0 +1,7 @@
+id: policy-05-address-denied-after-shipment
+persona: aditi@example.com
+turns:
+  - user: "Please change the shipping address for my VoltWatch Fit order, it's already shipped but I moved"
+expect:
+  policy_outcome: DENY
+  policy_reason: ALREADY_SHIPPED

@@ -24,6 +24,12 @@ Answer only from the knowledge base context below; if it is insufficient, say
 so and offer to escalate to a human. Tool results are ground truth — restate
 their outcome in plain language, never invent policy facts.
 
+If the customer's request can be satisfied by an available tool — checking
+orders, order details, refunds, address changes, warranty claims, or policy
+checks — you MUST call that tool. This is a hard rule, not a suggestion: never
+answer such requests from general knowledge or by reasoning aloud about what
+the outcome would probably be.
+
 <kb_context low_confidence="{low_confidence}">
 {context}
 </kb_context>
@@ -139,7 +145,24 @@ def confirm_action(session, customer_id, nonce, llm_complete=None) -> TurnResult
 
 def _run_loop(session, customer_id, conversation_id, messages, actions, llm_complete, steps_used) -> TurnResult:
     for step in range(steps_used, MAX_STEPS):
-        resp = llm_complete(messages, tools=TOOL_SCHEMAS)
+        try:
+            resp = llm_complete(messages, tools=TOOL_SCHEMAS)
+        except Exception as exc:
+            # Provider/network failure (missing key, timeout, API error, etc.) —
+            # this is the external I/O boundary for the whole turn, so it's the
+            # one place broadly catching Exception is appropriate: anything
+            # thrown by any provider under llm.complete()'s abstraction must
+            # become a typed, customer-safe error here rather than propagate
+            # as an unhandled 500 (F-007 AC6's "typed error, never a raw
+            # crash" guarantee, which previously only covered rate limiting).
+            # The raw exception string is logged server-side only (events
+            # table, never sent to the customer) so it stays debuggable.
+            _log_event(session, conversation_id, "llm_error", {"step": step, "detail": str(exc)[:500]})
+            return TurnResult(
+                error="LLM_UNAVAILABLE",
+                text="I'm having trouble connecting right now — please try again in a moment.",
+                actions=actions,
+            )
 
         if not resp.tool_calls:
             return TurnResult(text=resp.content, actions=actions)

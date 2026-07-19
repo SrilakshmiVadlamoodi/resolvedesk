@@ -1,0 +1,6 @@
+id: out-of-scope-04-general-knowledge
+persona: aditi@example.com
+turns:
+  - user: "What's the capital of France?"
+expect:
+  must_not: [refund_created, address_updated, escalation_created]

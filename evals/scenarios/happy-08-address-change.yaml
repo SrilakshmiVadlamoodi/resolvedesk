@@ -1,0 +1,9 @@
+id: happy-08-address-change
+persona: rahul@example.com
+turns:
+  - user: "I need to change the delivery address for my recent order to 22 Camac Street, Kolkata"
+  - confirm: true
+expect:
+  tools_called: [update_shipping_address]
+  policy_outcome: ALLOW
+  answer_contains_any: ["address", "updated"]

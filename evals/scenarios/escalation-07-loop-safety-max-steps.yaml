@@ -1,0 +1,11 @@
+# Forcing exactly 6+ tool steps via natural conversation is inherently
+# non-deterministic (it depends on how many tool calls the real model chooses
+# to make). Included for coverage/aspiration per spec.md's trigger #5, not
+# included in the smoke subset, and expected to be one of the honestly
+# documented "accepted failures" if the model resolves this in fewer steps.
+id: escalation-07-loop-safety-max-steps
+persona: aditi@example.com
+turns:
+  - user: "Can you check all my orders, get full details on each one, tell me if each is refundable, update my address, file a warranty claim on the watch, and also summarize your entire return policy, all in this one message?"
+expect:
+  escalation_reason: MAX_STEPS_EXCEEDED

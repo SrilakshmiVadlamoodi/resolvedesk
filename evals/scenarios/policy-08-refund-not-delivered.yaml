@@ -1,0 +1,9 @@
+id: policy-08-refund-not-delivered
+persona: rahul@example.com
+turns:
+  - user: "I want a refund on my VoltPlug Mini order even though it hasn't shipped yet"
+expect:
+  policy_outcome: ESCALATE
+  escalation_reason: NOT_DELIVERED
+  policy_reason: NOT_DELIVERED
+  must_not: [refund_created]

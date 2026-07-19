@@ -1,0 +1,7 @@
+id: happy-11-product-question-smart-home
+persona: aditi@example.com
+turns:
+  - user: "Does the smart plug work with voice assistants?"
+expect:
+  tools_called: [search_kb]
+  answer_contains_any: ["voice assistant", "connected services"]

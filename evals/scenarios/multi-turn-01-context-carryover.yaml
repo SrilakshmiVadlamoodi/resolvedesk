@@ -1,0 +1,7 @@
+id: multi-turn-01-context-carryover
+persona: aditi@example.com
+turns:
+  - user: "What's your refund window?"
+  - user: "And what about the warranty?"
+expect:
+  answer_contains_any: ["12 month", "18 month", "warranty"]
